@@ -96,7 +96,7 @@ def predict_image(model, device, image_path):
 # ── Flask App ────────────────────────────────────────────────────────────────
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(32)
+app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 
 model, device = load_model()
 
