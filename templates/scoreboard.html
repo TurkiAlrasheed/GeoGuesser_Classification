@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Final Score – SoCalGuessr{% endblock %}
+
+{% block content %}
+<div class="scoreboard-page">
+    <h1 class="scoreboard-title">Game Over</h1>
+
+    {% if player_score > ai_score %}
+        <p class="scoreboard-verdict verdict-win">You beat the AI!</p>
+    {% elif ai_score > player_score %}
+        <p class="scoreboard-verdict verdict-lose">The AI wins this time.</p>
+    {% else %}
+        <p class="scoreboard-verdict verdict-tie">It's a tie!</p>
+    {% endif %}
+
+    <div class="final-scores">
+        <div class="final-score-card player-card fade-in-up" style="animation-delay: 0.2s">
+            <span class="final-label">You</span>
+            <span class="final-value">{{ "{:,}".format(player_score) }}</span>
+            <span class="final-detail">{{ player_correct_count }} / {{ total_rounds }} correct</span>
+        </div>
+        <div class="final-vs fade-in-up" style="animation-delay: 0.4s">VS</div>
+        <div class="final-score-card ai-card fade-in-up" style="animation-delay: 0.6s">
+            <span class="final-label">AI</span>
+            <span class="final-value">{{ "{:,}".format(ai_score) }}</span>
+            <span class="final-detail">{{ ai_correct_count }} / {{ total_rounds }} correct</span>
+        </div>
+    </div>
+
+    <div class="history-section fade-in-up" style="animation-delay: 0.9s">
+        <h2 class="history-title">Round-by-Round</h2>
+        <div class="history-table-wrap">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Correct City</th>
+                        <th>Your Guess</th>
+                        <th>AI Guess</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in history %}
+                    <tr>
+                        <td class="round-col">{{ loop.index }}</td>
+                        <td>{{ display_names.get(h.ground_truth, h.ground_truth) }}</td>
+                        <td class="{{ 'cell-correct' if h.player_correct else 'cell-wrong' }}">
+                            {{ display_names.get(h.player_guess, h.player_guess) }}
+                        </td>
+                        <td class="{{ 'cell-correct' if h.ai_correct else 'cell-wrong' }}">
+                            {{ display_names.get(h.ai_guess, h.ai_guess) }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="scoreboard-actions fade-in-up" style="animation-delay: 1.2s">
+        <form action="{{ url_for('start') }}" method="post">
+            <button type="submit" class="btn-start">Play Again</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

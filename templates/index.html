@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}SoCalGuessr – Can You Beat the AI?{% endblock %}
+
+{% block content %}
+<div class="landing">
+    <div class="landing-card">
+        <h1 class="landing-title">SoCal<span>Guessr</span></h1>
+        <p class="landing-subtitle">Human vs. AI</p>
+        <div class="landing-divider"></div>
+        <p class="landing-desc">
+            You'll see street-view images from <strong>6 Southern California cities</strong>.
+            Guess the city — then see if our EfficientNet-B0 model can beat you.
+        </p>
+        <div class="city-tags">
+            <span class="city-tag">Anaheim</span>
+            <span class="city-tag">Bakersfield</span>
+            <span class="city-tag">Los Angeles</span>
+            <span class="city-tag">Riverside</span>
+            <span class="city-tag">San Luis Obispo</span>
+            <span class="city-tag">San Diego</span>
+        </div>
+        <form action="{{ url_for('start') }}" method="post">
+            <button type="submit" class="btn-start">Start Game</button>
+        </form>
+        <p class="landing-rounds">10 rounds &middot; 1,000 pts per correct answer</p>
+    </div>
+</div>
+{% endblock %}

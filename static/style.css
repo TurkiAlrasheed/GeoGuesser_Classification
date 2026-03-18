@@ -1,0 +1,736 @@
+/* ── Reset & Variables ──────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-deep: #0b0f1a;
+    --bg-surface: #141926;
+    --bg-card: #1c2235;
+    --bg-card-hover: #242b42;
+    --border: #2a3250;
+    --text-primary: #e8ecf4;
+    --text-secondary: #8892a8;
+    --text-muted: #5a6380;
+    --accent: #f0c040;
+    --accent-dim: #c49a20;
+    --green: #34d399;
+    --green-bg: rgba(52, 211, 153, 0.12);
+    --red: #f87171;
+    --red-bg: rgba(248, 113, 113, 0.12);
+    --player-color: #60a5fa;
+    --ai-color: #c084fc;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --font-body: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+/* ── Top Bar ───────────────────────────────────────────────────────────── */
+
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+/* ── Scoreboard Mini (header) ──────────────────────────────────────────── */
+
+.scoreboard-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.score-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.player-pill {
+    background: rgba(96, 165, 250, 0.15);
+    color: var(--player-color);
+}
+
+.ai-pill {
+    background: rgba(192, 132, 252, 0.15);
+    color: var(--ai-color);
+}
+
+.score-label {
+    font-weight: 400;
+    opacity: 0.8;
+}
+
+.score-value {
+    font-family: var(--font-mono);
+}
+
+.round-pill {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+}
+
+/* ── Landing Page ──────────────────────────────────────────────────────── */
+
+.landing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 56px);
+    padding: 2rem;
+}
+
+.landing-card {
+    text-align: center;
+    max-width: 520px;
+    width: 100%;
+}
+
+.landing-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.landing-title span {
+    color: var(--accent);
+}
+
+.landing-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+}
+
+.landing-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+    margin: 1.5rem auto;
+    border-radius: 2px;
+}
+
+.landing-desc {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.city-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.city-tag {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-secondary);
+    background: var(--bg-surface);
+}
+
+.btn-start {
+    display: inline-block;
+    padding: 0.9rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--bg-deep);
+    background: var(--accent);
+    border-radius: 999px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 24px rgba(240, 192, 64, 0.25);
+}
+
+.btn-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 32px rgba(240, 192, 64, 0.35);
+}
+
+.btn-start:active {
+    transform: translateY(0);
+}
+
+.landing-rounds {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ── Game Page ─────────────────────────────────────────────────────────── */
+
+.game-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.image-frame {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    aspect-ratio: 16 / 9;
+}
+
+.game-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+}
+
+.round-badge {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.guess-section {
+    margin-top: 1.5rem;
+}
+
+.guess-prompt {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.city-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.city-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+
+.city-btn:hover {
+    border-color: var(--accent);
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+}
+
+.city-btn:active {
+    transform: translateY(0);
+}
+
+.city-pin {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+}
+
+/* ── Result Page ───────────────────────────────────────────────────────── */
+
+.result-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.result-image-frame {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    aspect-ratio: 16 / 9;
+    max-height: 340px;
+}
+
+.result-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.result-reveal {
+    margin-top: 1.5rem;
+}
+
+.result-answer {
+    text-align: center;
+    margin-bottom: 1.25rem;
+}
+
+.result-answer-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.result-answer-city {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.result-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.result-card {
+    position: relative;
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    background: var(--bg-card);
+    overflow: hidden;
+}
+
+.result-card.correct {
+    border-color: var(--green);
+    background: var(--green-bg);
+}
+
+.result-card.wrong {
+    border-color: var(--red);
+    background: var(--red-bg);
+}
+
+.result-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.result-who {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.result-points {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.result-card.correct .result-points {
+    color: var(--green);
+}
+
+.result-card.wrong .result-points {
+    color: var(--red);
+}
+
+.result-card-city {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.result-card-icon {
+    position: absolute;
+    top: 1rem;
+    right: -0.5rem;
+    width: 64px;
+    height: 64px;
+    opacity: 0.12;
+}
+
+.icon-check {
+    fill: var(--green);
+    width: 100%;
+    height: 100%;
+}
+
+.icon-x {
+    fill: var(--red);
+    width: 100%;
+    height: 100%;
+}
+
+/* ── Confidence Bars ───────────────────────────────────────────────────── */
+
+.confidence-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.confidence-title {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.conf-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 50px;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.conf-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+.conf-highlight .conf-label {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.conf-track {
+    height: 8px;
+    background: var(--bg-deep);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.conf-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--ai-color);
+    width: 0%;
+    animation: grow-bar 0.8s ease-out forwards;
+    animation-delay: 1s;
+}
+
+.conf-fill.conf-correct {
+    background: var(--green);
+}
+
+@keyframes grow-bar {
+    to { width: var(--target-width); }
+}
+
+.conf-pct {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: right;
+}
+
+.conf-highlight .conf-pct {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* ── Next / Action Buttons ─────────────────────────────────────────────── */
+
+.result-actions {
+    text-align: center;
+}
+
+.btn-next {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--bg-deep);
+    background: var(--accent);
+    border-radius: 999px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 20px rgba(240, 192, 64, 0.2);
+}
+
+.btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(240, 192, 64, 0.3);
+}
+
+.btn-final {
+    font-size: 1.15rem;
+    padding: 1rem 2.5rem;
+}
+
+/* ── Scoreboard Page ───────────────────────────────────────────────────── */
+
+.scoreboard-page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    text-align: center;
+}
+
+.scoreboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.scoreboard-verdict {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.verdict-win { color: var(--green); }
+.verdict-lose { color: var(--red); }
+.verdict-tie { color: var(--accent); }
+
+.final-scores {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.final-score-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    background: var(--bg-card);
+    min-width: 160px;
+}
+
+.player-card { border-color: var(--player-color); }
+.ai-card { border-color: var(--ai-color); }
+
+.final-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.final-value {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.player-card .final-value { color: var(--player-color); }
+.ai-card .final-value { color: var(--ai-color); }
+
+.final-detail {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.final-vs {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+/* ── History Table ─────────────────────────────────────────────────────── */
+
+.history-section {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.history-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.history-table-wrap {
+    overflow-x: auto;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.history-table th {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.history-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+.round-col {
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+}
+
+.cell-correct {
+    color: var(--green);
+    font-weight: 600;
+}
+
+.cell-wrong {
+    color: var(--red);
+    font-weight: 600;
+}
+
+/* ── Scoreboard Actions ────────────────────────────────────────────────── */
+
+.scoreboard-actions {
+    margin-top: 1rem;
+}
+
+/* ── Animations ────────────────────────────────────────────────────────── */
+
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+    .city-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .result-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .conf-row {
+        grid-template-columns: 100px 1fr 45px;
+    }
+
+    .landing-title {
+        font-size: 2.5rem;
+    }
+
+    .final-scores {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .final-vs {
+        font-size: 1rem;
+    }
+
+    .final-score-card {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .scoreboard-mini {
+        gap: 0.4rem;
+    }
+
+    .score-pill {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}

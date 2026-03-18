@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Round {{ round_num }} – SoCalGuessr{% endblock %}
+
+{% block header_right %}
+<div class="scoreboard-mini">
+    <div class="score-pill player-pill">
+        <span class="score-label">You</span>
+        <span class="score-value">{{ "{:,}".format(player_score) }}</span>
+    </div>
+    <div class="round-pill">{{ round_num }} / {{ total_rounds }}</div>
+    <div class="score-pill ai-pill">
+        <span class="score-label">AI</span>
+        <span class="score-value">{{ "{:,}".format(ai_score) }}</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="game-container">
+    <div class="image-frame">
+        <img
+            src="{{ url_for('serve_image', filename=image_file) }}"
+            alt="Street view image"
+            class="game-image"
+            loading="eager"
+        >
+        <div class="image-overlay">
+            <span class="round-badge">Round {{ round_num }}</span>
+        </div>
+    </div>
+
+    <div class="guess-section">
+        <h2 class="guess-prompt">Where is this?</h2>
+        <form action="{{ url_for('guess') }}" method="post" id="guess-form">
+            <div class="city-grid">
+                {% for cls in classes %}
+                <button
+                    type="submit"
+                    name="guess"
+                    value="{{ cls }}"
+                    class="city-btn"
+                    data-city="{{ cls }}"
+                >
+                    <span class="city-pin"></span>
+                    <span class="city-name">{{ display_names[cls] }}</span>
+                </button>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

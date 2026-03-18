@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Result – Round {{ round_num }} – SoCalGuessr{% endblock %}
+
+{% block header_right %}
+<div class="scoreboard-mini">
+    <div class="score-pill player-pill">
+        <span class="score-label">You</span>
+        <span class="score-value">{{ "{:,}".format(player_score) }}</span>
+    </div>
+    <div class="round-pill">{{ round_num }} / {{ total_rounds }}</div>
+    <div class="score-pill ai-pill">
+        <span class="score-label">AI</span>
+        <span class="score-value">{{ "{:,}".format(ai_score) }}</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <div class="result-image-frame">
+        <img
+            src="{{ url_for('serve_image', filename=image_file) }}"
+            alt="Street view image"
+            class="result-image"
+        >
+    </div>
+
+    <div class="result-reveal">
+        <div class="result-answer">
+            <span class="result-answer-label">Correct Answer</span>
+            <span class="result-answer-city">{{ display_names[ground_truth] }}</span>
+        </div>
+
+        <div class="result-cards">
+            <div class="result-card {{ 'correct' if player_correct else 'wrong' }} fade-in-up" style="animation-delay: 0.2s">
+                <div class="result-card-header">
+                    <span class="result-who">You guessed</span>
+                    <span class="result-points">{{ "+{:,}".format(player_points) if player_correct else "+0" }}</span>
+                </div>
+                <div class="result-card-city">{{ display_names[player_guess] }}</div>
+                <div class="result-card-icon">
+                    {% if player_correct %}
+                        <svg viewBox="0 0 24 24" class="icon-check"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    {% else %}
+                        <svg viewBox="0 0 24 24" class="icon-x"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="result-card {{ 'correct' if ai_correct else 'wrong' }} fade-in-up" style="animation-delay: 0.5s">
+                <div class="result-card-header">
+                    <span class="result-who">AI guessed</span>
+                    <span class="result-points">{{ "+{:,}".format(ai_points) if ai_correct else "+0" }}</span>
+                </div>
+                <div class="result-card-city">{{ display_names[ai_guess] }}</div>
+                <div class="result-card-icon">
+                    {% if ai_correct %}
+                        <svg viewBox="0 0 24 24" class="icon-check"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    {% else %}
+                        <svg viewBox="0 0 24 24" class="icon-x"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="confidence-section fade-in-up" style="animation-delay: 0.8s">
+            <h3 class="confidence-title">AI Confidence</h3>
+            <div class="confidence-bars">
+                {% for city, pct in confidence %}
+                <div class="conf-row {{ 'conf-highlight' if city == ai_guess else '' }}">
+                    <span class="conf-label">{{ display_names[city] }}</span>
+                    <div class="conf-track">
+                        <div class="conf-fill {{ 'conf-correct' if city == ground_truth else '' }}" style="--target-width: {{ pct }}%"></div>
+                    </div>
+                    <span class="conf-pct">{{ pct }}%</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="result-actions fade-in-up" style="animation-delay: 1.1s">
+            {% if is_last %}
+                <a href="{{ url_for('scoreboard') }}" class="btn-next btn-final">See Final Score</a>
+            {% else %}
+                <a href="{{ url_for('play') }}" class="btn-next">Next Round &rarr;</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
