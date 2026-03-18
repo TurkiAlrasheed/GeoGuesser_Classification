@@ -1,63 +1,80 @@
-# GeoGuesser Classification
+# SoCalGuessr
 
-This project uses deep learning to classify street-view images into one of six cities.
+A GeoGuessr-style web game where you compete head-to-head against an AI to identify Southern California cities from street-view images.
 
-## Overview
+You'll see a photo each round and pick from 6 cities: **Anaheim**, **Bakersfield**, **Los Angeles**, **Riverside**, **San Luis Obispo**, and **San Diego**. The AI makes its own prediction — after 10 rounds, see who wins.
 
-The model was built to learn visual patterns tied to location and predict which city an image came from. It was trained on a dataset of about 9,000 images and fine-tuned from a pretrained EfficientNet-B0 model.
+## Running the Game
 
-## Model
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/TurkiAlrasheed/GeoGuesser_Classification.git
+cd GeoGuesser_Classification
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Start the game
+
+```bash
+python app.py
+```
+
+Open **http://127.0.0.1:5000** in your browser.
+
+## Project Structure
+
+```
+├── app.py              # Flask web app (game server)
+├── train_vit.py        # Model training script
+├── predict_vit.py      # Standalone inference script
+├── model.pt            # Trained model weights
+├── history.json        # Training history (loss, accuracy)
+├── training_curve.png  # Training visualization
+├── requirements.txt    # Python dependencies
+├── data/               # Street-view images
+├── templates/          # HTML templates
+└── static/             # CSS and JavaScript
+```
+
+---
+
+## About the Model
+
+The AI opponent is an EfficientNet-B0 fine-tuned on ~9,000 street-view images to classify which of the 6 cities an image belongs to.
+
+### Architecture
 
 - EfficientNet-B0 pretrained on ImageNet
 - Final classification layer replaced for 6 output classes
 - Early feature layers frozen during fine-tuning
 
-## Training
+### Training
 
-- Optimizer: AdamW
-- Learning rate: 1e-4
-- Weight decay: 1e-4
+- Optimizer: AdamW (lr: 1e-4, weight decay: 1e-4)
 - Scheduler: cosine annealing
-- Loss function: cross-entropy loss
+- Loss: cross-entropy
 - Batch size: 32
 - Epochs: 15
 
-## Data Processing
+### Data Processing
 
-All images were resized to 224x224 before training.
+All images resized to 224x224. Training augmentations: random horizontal flip, rotation, color jitter, and affine translation. Validation images were only resized and normalized.
 
-Augmentations used during training:
-- random horizontal flip
-- random rotation
-- color jitter
-- random affine translation
+### Results
 
-Validation images were only resized and normalized.
+- **92.7%** validation accuracy
+- **95.5%** training accuracy
 
-## Results
+### Retraining
 
-The final model reached:
-
-- 92.7% validation accuracy
-- 95.5% training accuracy
-
-It also performed better than the human baseline from the project report.
-
-## Files
-- train_vit.py
-- predict_vit.py
-- README.md
-
-## Running the project
-
-Train the model:
+To retrain from scratch (optional — a trained `model.pt` is already included):
 
 ```bash
 python train_vit.py
-```
-
-Run prediction:
-
-```bash
-python predict_vit.py --image path/to/image.jpg
 ```
